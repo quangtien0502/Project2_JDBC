@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/b7b0babf-dfc0-406b-be51-e1ed4a05e593/common_procedure" dialect="MySQL" />
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/b7b0babf-dfc0-406b-be51-e1ed4a05e593/select" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/ra/business/ProductBusiness.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/ra/util/CommonFunction.java" dialect="GenericSQL" />
+  </component>
+</project>

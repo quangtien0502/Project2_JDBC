@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class ProductManagement {
     public static void displayProduct(Scanner scanner, Connection conn){
         boolean isExit = false;
+        Product product=new Product();
         int choice;
         do {
             System.out.println("""
@@ -23,13 +24,21 @@ public class ProductManagement {
             choice= CommonFunction.checkInteger("choice",scanner);
             switch (choice){
                 case 1:
-                    Product product=new Product();
                     product.displayData(ProductBusiness.listProduct(conn));
                     break;
-                case 2: break;
-                case 3: break;
-                case 4: break;
-                case 5: break;
+                case 2:
+                    product.inputData(scanner,conn);
+                    ProductBusiness.insertProduct(conn,product);
+                    break;
+                case 3:
+                    ProductBusiness.updateProduct(conn,scanner);
+                    break;
+                case 4:
+                    product.displayData(ProductBusiness.findProductByName(conn,scanner));
+                    break;
+                case 5:
+                    ProductBusiness.updateProductStatus(conn,scanner);
+                    break;
                 case 6:
                     isExit = true;
                     break;

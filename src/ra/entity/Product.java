@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Product implements IEntity<Product>{
-
     private String productId;
     private String productName;
     private String manufacturer;
@@ -92,7 +91,7 @@ public class Product implements IEntity<Product>{
             String productId=scanner.nextLine();
             if(!productId.isEmpty()){
                 if(productId.length()==5){
-                    if(!CommonFunction.checkDuplicateProductName(conn,productId)){
+                    if(!CommonFunction.checkDuplicateProductId(conn,productId)){
                         return productId;
                     }else {
                         System.err.println("The Id already Exist in the system");
@@ -124,6 +123,10 @@ public class Product implements IEntity<Product>{
         return scanner.nextLine();
     }
 
+    public static Date inputCreated(Scanner scanner){
+        return CommonFunction.checkDate(scanner,"created Date");
+    }
+
     public static short inputBatch(Scanner scanner){
         return CommonFunction.checkShort("batch",scanner);
     }
@@ -132,11 +135,21 @@ public class Product implements IEntity<Product>{
         return  CommonFunction.checkIntegerWithDefaultValue("quantity",scanner,0);
     }
 
+    public static boolean inputProductStatus(Scanner scanner){
+        return CommonFunction.checkBoolean("Product Status",scanner,true);
+    }
+
 
 
     @Override
     public void inputData(Scanner scanner,Connection conn) {
+
         this.productId=inputProductId(scanner,conn);
+        this.productName=inputProductName(scanner,conn);
+        this.manufacturer=inputManufacturer(scanner);
+        this.created=inputCreated(scanner);
+        this.batch=inputBatch(scanner);
+        this.productStatus=inputProductStatus(scanner);
     }
 
     @Override

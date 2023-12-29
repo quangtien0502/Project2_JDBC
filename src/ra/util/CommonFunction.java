@@ -4,6 +4,9 @@ import ra.entity.*;
 
 import java.io.*;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 
@@ -57,6 +60,18 @@ public class CommonFunction {
                 System.err.println("You must enter value true or false");
             }
         }while (true);
+    }
+
+    public static Date checkDate(Scanner scanner,String option){
+        System.out.println("Please enter your "+option);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        do {
+            try {
+                return sdf.parse(scanner.nextLine());
+            } catch (ParseException e) {
+                System.err.println("day format yyyy/MM/dd, please re enter");
+            }
+        } while (true);
     }
 
 
@@ -316,5 +331,9 @@ public class CommonFunction {
                 }
             }
         }
+    }
+
+    public static java.sql.Date convertToSqlDate(java.util.Date utilDate) {
+        return new java.sql.Date(utilDate.getTime());
     }
 }

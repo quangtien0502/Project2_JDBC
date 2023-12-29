@@ -1,7 +1,11 @@
 package ra.entity;
 
+import ra.util.CommonFunction;
+
+import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 public class Product implements IEntity<Product>{
 
@@ -82,11 +86,57 @@ public class Product implements IEntity<Product>{
         this.productStatus = productStatus;
     }
 
+    public static String inputProductId(Scanner scanner, Connection conn){
+        System.out.println("Please enter your product Id");
+        do {
+            String productId=scanner.nextLine();
+            if(!productId.isEmpty()){
+                if(productId.length()==5){
+                    if(!CommonFunction.checkDuplicateProductName(conn,productId)){
+                        return productId;
+                    }else {
+                        System.err.println("The Id already Exist in the system");
+                    }
+                }else {
+                    System.err.println("You must enter product Id with length 5");
+                }
+            }else {
+                System.err.println("You must enter product name");
+            }
+        }while (true);
+    }
+
+    public static String inputProductName(Scanner scanner,Connection conn){
+        System.out.println("Please enter your Product Name");
+        do {
+            String productName=scanner.nextLine();
+            if(!CommonFunction.checkDuplicateProductName(conn,productName)){
+                return productName;
+            }else {
+                System.err.println("The Product Name already exist in the system");
+            }
+        }while (true);
+
+    }
+
+    public static String inputManufacturer(Scanner scanner){
+        System.out.println("Please enter manufacturer");
+        return scanner.nextLine();
+    }
+
+    public static short inputBatch(Scanner scanner){
+        return CommonFunction.checkShort("batch",scanner);
+    }
+
+    public static int inputQuantity(Scanner scanner){
+        return  CommonFunction.checkIntegerWithDefaultValue("quantity",scanner,0);
+    }
+
 
 
     @Override
-    public void inputData() {
-
+    public void inputData(Scanner scanner,Connection conn) {
+        this.productId=inputProductId(scanner,conn);
     }
 
     @Override

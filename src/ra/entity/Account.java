@@ -1,7 +1,9 @@
 package ra.entity;
 
 import java.io.Serializable;
+import java.sql.Connection;
 import java.util.List;
+import java.util.Scanner;
 
 public class Account implements IEntity<Account>, Serializable {
 
@@ -75,7 +77,7 @@ public class Account implements IEntity<Account>, Serializable {
 
 
     @Override
-    public void inputData() {
+    public void inputData(Scanner scanner, Connection conn) {
 
     }
 

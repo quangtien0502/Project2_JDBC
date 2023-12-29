@@ -1,7 +1,9 @@
 package ra.entity;
 
+import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 public class Employee implements IEntity<Employee>{
 
@@ -83,7 +85,7 @@ public class Employee implements IEntity<Employee>{
     }
 
     @Override
-    public void inputData() {
+    public void inputData(Scanner scanner, Connection conn) {
 
     }
 

@@ -1,6 +1,8 @@
 package ra.entity;
 
+import java.sql.Connection;
 import java.util.List;
+import java.util.Scanner;
 
 public class BillDetail implements IEntity<BillDetail>{
 
@@ -62,7 +64,7 @@ public class BillDetail implements IEntity<BillDetail>{
     }
 
     @Override
-    public void inputData() {
+    public void inputData(Scanner scanner, Connection conn) {
 
     }
 

@@ -1,7 +1,9 @@
 package ra.entity;
 
+import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 public class Bill implements IEntity<Bill>{
 
@@ -94,7 +96,7 @@ public class Bill implements IEntity<Bill>{
 
 
     @Override
-    public void inputData() {
+    public void inputData(Scanner scanner, Connection conn) {
 
     }
 

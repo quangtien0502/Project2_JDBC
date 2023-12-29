@@ -25,4 +25,20 @@ public class ProductBusiness {
 
         return listProduct;
     }
+    public static void insertProduct(Connection conn,Product product){
+        try {
+            conn.setAutoCommit(false);
+            CallableStatement callableStatement=conn.prepareCall("{CALL InsertProduct()}");
+            callableStatement.setString(1,product.getProductId());
+            callableStatement.setString(2,product.getProductName());
+            callableStatement.setString(3,product.getManufacturer());
+            callableStatement.setShort(4,product.getBatch());
+            callableStatement.setInt(5,product.getQuantity());
+            callableStatement.setBoolean(6,product.isProductStatus());
+            callableStatement.executeUpdate();
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

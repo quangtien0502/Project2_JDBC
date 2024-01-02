@@ -1,5 +1,7 @@
 package ra.entity;
 
+import ra.util.CommonFunction;
+
 import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
@@ -94,10 +96,33 @@ public class Bill implements IEntity<Bill>{
         this.billStatus = billStatus;
     }
 
-
+    public static String inputEmpId(Scanner scanner,Connection conn,String option){
+        System.out.println("Please enter your "+option);
+        do {
+            String empId=scanner.nextLine();
+            if(option.trim().toLowerCase().contains("auth") && empId.isEmpty()){
+                return null;
+            }
+            if(CommonFunction.checkDuplicateEmpId(conn,empId)){
+                return empId;
+            }else {
+                System.err.println("That Id doesn't exists in the system");
+            }
+        }while (true);
+    }
     @Override
     public void inputData(Scanner scanner, Connection conn) {
+        this.billCode= CommonFunction.normalStringNotNull(scanner,"bill Code");
+        this.empIdCreated=inputEmpId(scanner,conn,"Employee Id Created");
+        this.empIdAuth=inputEmpId(scanner,conn,"Employee Id Authenticate");
+        this.billStatus= (short) CommonFunction.checkIntegerWithDefaultValue("bill Status",scanner,0);
+    }
 
+    public void inputData(Scanner scanner, Connection conn,String empIdCreated,String empIdAuth) {
+        this.billCode= CommonFunction.normalStringNotNull(scanner,"bill Code");
+        this.empIdCreated=empIdCreated;
+        this.empIdAuth=empIdAuth;
+        this.billStatus= (short) CommonFunction.checkIntegerWithDefaultValue("bill Status",scanner,0);
     }
 
     @Override
@@ -105,7 +130,7 @@ public class Bill implements IEntity<Bill>{
         printTableHeaderWithBoundaryAndAdditionalFields();
         for (Bill bill : listData) {
             System.out.printf("| %-10d | %-25s | %-15s | %-20s | %-20s | %-20s | %-20s | %-20s |%n",
-                    bill.getBillId(),bill.getBillCode(),bill.isBillType(),bill.getEmpIdCreated(),bill.getCreated(),bill.getEmpIdAuth(),bill.getAuthDate().toString(),bill.getBillStatus() );
+                    bill.getBillId(),bill.getBillCode(),bill.isBillType()?"Receipt":"Export Bill",bill.getEmpIdCreated(),bill.getCreated(),bill.getEmpIdAuth(),bill.getAuthDate()==null?"null":bill.getAuthDate().toString(),bill.getBillStatus()==0?"Create":bill.getBillStatus()==1?"Canceled":"Approved" );
         }
         printTableFooterWithBoundary();
     }
@@ -113,7 +138,7 @@ public class Bill implements IEntity<Bill>{
     private static void printTableHeaderWithBoundaryAndAdditionalFields() {
         printHorizontalLineWithBoundary();
         System.out.printf("| %-10s | %-25s | %-15s | %-20s | %-20s | %-20s | %-20s | %-20s |%n",
-                "Account Id", "User Name", "Password", "Permission", "Employee Id", "Account Status");
+                "Bill Id","Bill Code","Bill Type","Emp Id Created","Created","Emp Id Auth","Auth Date","Bill Status");
         printHorizontalLineWithBoundary();
     }
     private static void printTableFooterWithBoundary() {

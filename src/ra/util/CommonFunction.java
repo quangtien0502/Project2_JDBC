@@ -1,6 +1,7 @@
 package ra.util;
 
 import ra.entity.*;
+import ra.presentation.PreLogin;
 
 import java.io.*;
 import java.sql.*;
@@ -15,7 +16,7 @@ public class CommonFunction {
     public static int checkInteger(String option, Scanner scanner) {
         do {
             try {
-                System.out.printf("Please enter your %s \n", option);
+                System.out.println("Please enter your "+ option);
                 return Integer.parseInt(scanner.nextLine());
 
             } catch (NumberFormatException nfx) {
@@ -27,11 +28,28 @@ public class CommonFunction {
     public static short checkShort(String option, Scanner scanner) {
         do {
             try {
-                System.out.printf("Please enter your %s \n", option);
+                System.out.println("Please enter your "+ option);
                 return Short.parseShort(scanner.nextLine());
 
             } catch (NumberFormatException nfx) {
                 System.err.println("Please enter an short value which has value smaller than 127");
+            }
+        } while (true);
+    }
+
+    public static float checkFloat(String option, Scanner scanner) {
+        do {
+            try {
+                System.out.println("Please enter your "+ option);
+                String price = scanner.nextLine();
+                if(price.trim().isEmpty()){
+                    return Float.parseFloat(price);
+                }else {
+                    System.err.println("You must enter the price");
+                }
+
+            } catch (NumberFormatException nfx) {
+                System.err.println("Please enter a number value");
             }
         } while (true);
     }
@@ -67,13 +85,44 @@ public class CommonFunction {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         do {
             try {
-                return sdf.parse(scanner.nextLine());
+                String date=scanner.nextLine();
+                if(date.isEmpty()){
+                    return new Date();
+                }else {
+                    return sdf.parse(date);
+                }
             } catch (ParseException e) {
                 System.err.println("day format yyyy/MM/dd, please re enter");
             }
         } while (true);
     }
 
+    public static String normalString(Scanner scanner,String option){
+        System.out.println("Please enter your "+option);
+        return scanner.nextLine();
+    }
+
+    public static String normalStringNotNull(Scanner scanner,String option){
+        System.out.println("Please enter your "+option);
+        do {
+            String s= scanner.nextLine();
+            if(!s.trim().isEmpty()){
+                return s;
+            }else {
+                System.err.println("You must enter "+option);
+            }
+        }while (true);
+    }
+
+
+    public static long checkLong(Scanner scanner,String option){
+        System.out.println("Please enter your "+option);
+        try{
+            return Long.parseLong(scanner.nextLine());
+        }catch (NumberFormatException nfx){
+            System.err.println("Please enter a number value");
+        }
+    }
 
     public static int checkIntegerWithDefaultValue(String option, Scanner scanner, int defaultValue) {
         System.out.println("Please enter your " + option);
@@ -177,6 +226,40 @@ public class CommonFunction {
         }
     }
 
+    public static boolean checkDuplicateBillId(Connection conn, long value) {
+        boolean isDuplicate;
+        try {
+            CallableStatement callableStatement = conn.prepareCall("{CALL checkDuplicateBillId(?, ?)}");
+            callableStatement.setLong(1, value);
+            callableStatement.registerOutParameter(2, Types.BOOLEAN);
+            callableStatement.execute();
+
+            isDuplicate = callableStatement.getBoolean(2);
+            return isDuplicate;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return true;
+
+        }
+    }
+
+    public static boolean checkDuplicateAccountId(Connection conn, int value) {
+        boolean isDuplicate;
+        try {
+            CallableStatement callableStatement = conn.prepareCall("{CALL checkDuplicateAccountId(?, ?)}");
+            callableStatement.setLong(1, value);
+            callableStatement.registerOutParameter(2, Types.BOOLEAN);
+            callableStatement.execute();
+
+            isDuplicate = callableStatement.getBoolean(2);
+            return isDuplicate;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return true;
+
+        }
+    }
+
     public static boolean checkLogin(Connection conn, String userName, String password) {
         try {
             CallableStatement callableStatement = conn.prepareCall("{CALL checkPassWord(?, ?,?)}");
@@ -217,6 +300,19 @@ public class CommonFunction {
         }
 
 
+    }
+
+    public static int countNumberEmpInAccount(Connection conn,String empId){
+        try {
+            CallableStatement callableStatement=conn.prepareCall("{CALL countEmpIdInAccount(?,?)}");
+            callableStatement.setString(1,empId);
+            callableStatement.registerOutParameter(2,Types.INTEGER);
+            callableStatement.execute();
+            return callableStatement.getInt(2);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 1;
+        }
     }
 
     //---------------------------------Check Duplicate End--------------------------------
@@ -334,6 +430,10 @@ public class CommonFunction {
     }
 
     public static java.sql.Date convertToSqlDate(java.util.Date utilDate) {
-        return new java.sql.Date(utilDate.getTime());
+        if(utilDate == null){
+            return null;
+        }else {
+            return new java.sql.Date(utilDate.getTime());
+        }
     }
 }

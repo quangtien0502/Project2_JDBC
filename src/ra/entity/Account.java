@@ -1,8 +1,11 @@
 package ra.entity;
 
+import ra.util.CommonFunction;
+
 import java.io.Serializable;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Account implements IEntity<Account>, Serializable {
@@ -74,11 +77,53 @@ public class Account implements IEntity<Account>, Serializable {
         this.accountStatus = accountStatus;
     }
 
+    public static String inputUserName(Scanner scanner,Connection conn){
+        System.out.println("Please enter your User Name");
+        do {
+            String userName=scanner.nextLine();
+            if (!userName.trim().isEmpty()){
+                if(!CommonFunction.checkDuplicateEmpName(conn,userName)){
+                    return userName;
+                }else {
+                    System.err.println("The userName already exist in the system, please try again");
+                }
+            }else {
+                System.err.println("You must enter userName");
+            }
+        }while (true);
+    }
 
+    public static String inputEmpId(Scanner scanner,Connection conn){
+        System.out.println("Please enter your Employee Id");
+        do {
+            String empId=scanner.nextLine();
+            if(CommonFunction.checkDuplicateEmpId(conn,empId)){
+                if(CommonFunction.countNumberEmpInAccount(conn,empId)==0){
+                    return empId;
+                }else {
+                    System.err.println("This Employee Already has an account");
+                }
+            }else {
+                System.err.println("That Id doesn't exists in the system");
+            }
+        }while (true);
+    }
 
     @Override
     public void inputData(Scanner scanner, Connection conn) {
+        this.userName=inputUserName(scanner,conn);
+        this.password=CommonFunction.normalStringNotNull(scanner,"password");
+        this.permission=CommonFunction.checkBoolean("Permission",scanner,true);
+        this.empId=inputEmpId(scanner,conn);
+        this.accountStatus=CommonFunction.checkBoolean("Account Status",scanner,true);
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return accountId == account.accountId && permission == account.permission && accountStatus == account.accountStatus && Objects.equals(userName, account.userName) && Objects.equals(password, account.password) && Objects.equals(empId, account.empId);
     }
 
     @Override
@@ -86,7 +131,7 @@ public class Account implements IEntity<Account>, Serializable {
         printTableHeaderWithBoundaryAndAdditionalFields();
         for (Account account : listData) {
             System.out.printf("| %-10d | %-25s | %-25s | %-20s | %-20s | %-20s |%n",
-                   account.getAccountId(),account.getUserName(),account.getPassword(),account.isPermission(),account.getEmpId(),account.isAccountStatus() );
+                   account.getAccountId(),account.getUserName(),account.getPassword(),account.isPermission()?"User":"Admin",account.getEmpId(),account.isAccountStatus() ?"active":"block");
         }
         printTableFooterWithBoundary();
     }

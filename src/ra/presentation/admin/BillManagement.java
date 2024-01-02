@@ -1,13 +1,21 @@
 package ra.presentation.admin;
 
+import ra.business.BillBusiness;
+import ra.business.BillDetailBusiness;
+import ra.entity.Bill;
+import ra.entity.BillDetail;
+import ra.presentation.admin.update.BillUpdate;
 import ra.util.CommonFunction;
 
+import java.sql.Connection;
+import java.util.List;
 import java.util.Scanner;
 
 public class BillManagement {
-    public static void displayBill(Scanner scanner){
+    public static void displayBill(Scanner scanner, Connection conn){
         boolean isExit = false;
         int choice;
+        Bill bill=new Bill();
         do {
             System.out.println("""
                     ******************BILL MANAGEMENT****************
@@ -20,12 +28,38 @@ public class BillManagement {
                     7. Back.""");
             choice = CommonFunction.checkInteger("choice",scanner);
             switch (choice){
-                case 1: break;
-                case 2: break;
-                case 3: break;
-                case 4: break;
-                case 5: break;
-                case 6: break;
+                case 1:
+                    bill.displayData(BillBusiness.listBill(conn,"export"));
+                    break;
+                case 2:
+                    bill.inputData(scanner,conn);
+                    BillBusiness.insertAndUpdateBill(conn,bill,"insert",false);
+                    break;
+                case 3:
+                    bill=BillBusiness.findBillById(conn,scanner,"export");
+                    if(!bill.equals(new Bill())){
+                        BillUpdate.billUpdatePresent(bill,scanner,conn,"export");
+                        BillBusiness.insertAndUpdateBill(conn,bill,"update",false);
+                    }
+                    break;
+                case 4:
+                    bill=BillBusiness.findBillById(conn,scanner,"export");
+                    if(!bill.equals(new Bill())){
+                        List<BillDetail> listBillDetail= BillDetailBusiness.findBillDetailByBillId(scanner,conn,bill.getBillId());
+                        BillDetail billDetail=new BillDetail();
+                        billDetail.displayData(listBillDetail);
+                    }
+                    break;
+                case 5:
+                    bill=BillBusiness.findBillById(conn,scanner,"export");
+                    if(!bill.equals(new Bill())){
+                        bill.setBillStatus((short) 2);
+                        BillBusiness.insertAndUpdateBill(conn,bill,"update",false);
+                    }
+                    break;
+                case 6:
+                    bill.displayData(BillBusiness.findBillByBillCode(conn,scanner,"export"));
+                    break;
                 case 7:
                     isExit = true;
                     break;

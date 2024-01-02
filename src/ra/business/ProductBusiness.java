@@ -1,5 +1,7 @@
 package ra.business;
 
+import ra.entity.Bill;
+import ra.entity.BillDetail;
 import ra.entity.Product;
 import ra.presentation.admin.update.ProductUpdate;
 import ra.util.CommonFunction;
@@ -30,6 +32,29 @@ public class ProductBusiness {
     findProductById(Connection conn, Scanner scanner) {
         System.out.println("Please enter your product Id");
         String productId = scanner.nextLine();
+        if (CommonFunction.checkDuplicateProductId(conn, productId)) {
+            try {
+                CallableStatement callableStatement = conn.prepareCall("{CALL findProductById(?)}");
+                callableStatement.setString(1, productId);
+                ResultSet rs = callableStatement.executeQuery();
+                rs.next();
+                return new Product(rs.getString("product_id"), rs.getString("product_name"),
+                        rs.getString("manufacturer"), rs.getDate("created"),
+                        rs.getShort("batch"), rs.getInt("quantity"),
+                        rs.getBoolean("product_status"));
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return new Product();
+            }
+        } else {
+            System.err.println("The id doesn't exist in the system");
+            return new Product();
+        }
+
+    }
+
+    public static Product
+    findProductById(Connection conn, String productId) {
         if (CommonFunction.checkDuplicateProductId(conn, productId)) {
             try {
                 CallableStatement callableStatement = conn.prepareCall("{CALL findProductById(?)}");
@@ -141,5 +166,44 @@ public class ProductBusiness {
         }
     }
 
+    public static List<Product> findListProductWithListBillDetail(List<BillDetail> listBillDetail,Connection conn){
+        List<Product> listProduct=new ArrayList<>();
+        for (BillDetail billDetail :
+                listBillDetail) {
+            Product product=findProductById(conn,billDetail.getProductId());
+            if(!product.equals(new Product())){
+                listProduct.add(product);
+            }
+        }
+        return listProduct;
+    }
 
+    public static void displayProductWithListBill(List<BillDetail> listBillDetail, List<Product> listProduct){
+        printTableHeaderWithBoundaryAndAdditionalFields();
+        for (BillDetail billDetail :
+                listBillDetail) {
+            for (Product product :
+                    listProduct) {
+                if(billDetail.getProductId().equals(product.getProductId())){
+                    System.out.printf("| %-7s | %-25s | %-25s | %-25s | %-5d | %-15d | %-15s | %-15d |%n",
+                            product.getProductId(),product.getProductName(),product.getManufacturer(),product.getCreated().toString(),product.getBatch(),product.getQuantity(),product.isProductStatus()?"Active":"In Active",billDetail.getQuantity());
+                }
+            }
+        }
+        printTableFooterWithBoundary();
+    }
+    private static void printTableHeaderWithBoundaryAndAdditionalFields() {
+        printHorizontalLineWithBoundary();
+        System.out.printf("| %-7s | %-25s | %-25s | %-25s | %-5s | %-15s | %-15s | %-15s |%n",
+                "ID", "Name", "Manufacturer", "Created Date", "Batch", "Quantity","Product Status","Quantity");
+        printHorizontalLineWithBoundary();
+    }
+
+    private static void printTableFooterWithBoundary() {
+        printHorizontalLineWithBoundary();
+    }
+
+    private static void printHorizontalLineWithBoundary() {
+        System.out.println("+---------+---------------------------+---------------------------+---------------------------+-------+-----------------+-----------------+-----------------+");
+    }
 }

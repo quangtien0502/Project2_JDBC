@@ -120,7 +120,14 @@ public class Product implements IEntity<Product>{
 
     public static String inputManufacturer(Scanner scanner){
         System.out.println("Please enter manufacturer");
-        return scanner.nextLine();
+        do {
+            String manufacturer= scanner.nextLine();
+            if(!manufacturer.isEmpty()){
+                return manufacturer;
+            }else {
+                System.err.println("You must enter manufacturer");
+            }
+        }while (true);
     }
 
     public static Date inputCreated(Scanner scanner){
@@ -129,10 +136,6 @@ public class Product implements IEntity<Product>{
 
     public static short inputBatch(Scanner scanner){
         return CommonFunction.checkShort("batch",scanner);
-    }
-
-    public static int inputQuantity(Scanner scanner){
-        return  CommonFunction.checkIntegerWithDefaultValue("quantity",scanner,0);
     }
 
     public static boolean inputProductStatus(Scanner scanner){

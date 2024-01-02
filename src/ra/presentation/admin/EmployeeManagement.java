@@ -65,7 +65,7 @@ public class EmployeeManagement {
                     break;
                 case 6:
                     PreLogin.account=new Account();
-                    isExit = true;
+                    isExit=true;
                     break;
                 case 7:
                     isExit = true;

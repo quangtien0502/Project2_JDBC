@@ -4,10 +4,8 @@ import ra.business.BillBusiness;
 import ra.business.BillDetailBusiness;
 import ra.business.EmployeeBusiness;
 import ra.business.ProductBusiness;
-import ra.entity.Bill;
-import ra.entity.BillDetail;
-import ra.entity.Employee;
-import ra.entity.Product;
+import ra.entity.*;
+import ra.presentation.PreLogin;
 import ra.util.CommonFunction;
 
 import java.sql.Connection;
@@ -38,7 +36,8 @@ public class ReportManagement {
                     7. Statistics on imported products at least over a period of time
                     8. Statistics of products produced the most in a period of time
                     9. Statistics on products produced at least over a period of time
-                    10. Back.""");
+                    10. Logout
+                    11.Back.""");
             choice= CommonFunction.checkInteger("choice",scanner);
             switch (choice){
                 case 1:
@@ -99,7 +98,7 @@ public class ReportManagement {
                     listBill= BillBusiness.findBillBeforeGivenDate(conn,date1,"import");
                     listBillDetail=new ArrayList<>();
                     BillDetailBusiness.addListBillDetail(listBill,scanner,conn,listBillDetail);
-                    listBillDetail=BillDetailBusiness.filterBillDetailWithMaxQuantity(listBillDetail);
+                    listBillDetail=BillDetailBusiness.filterBillDetailWithMaxQuantity(listBillDetail,conn,"import");
                     listProduct= ProductBusiness.findListProductWithListBillDetail(listBillDetail,conn);
                     ProductBusiness.displayProductWithListBill(listBillDetail,listProduct);
                     break;
@@ -108,7 +107,7 @@ public class ReportManagement {
                     listBill= BillBusiness.findBillBeforeGivenDate(conn,date1,"import");
                     listBillDetail=new ArrayList<>();
                     BillDetailBusiness.addListBillDetail(listBill,scanner,conn,listBillDetail);
-                    listBillDetail=BillDetailBusiness.filterBillDetailWithMinQuantity(listBillDetail);
+                    listBillDetail=BillDetailBusiness.filterBillDetailWithMinQuantity(listBillDetail,conn,"import");
                     listProduct= ProductBusiness.findListProductWithListBillDetail(listBillDetail,conn);
                     ProductBusiness.displayProductWithListBill(listBillDetail,listProduct);
                     break;
@@ -117,7 +116,7 @@ public class ReportManagement {
                     listBill= BillBusiness.findBillBeforeGivenDate(conn,date1,"export");
                     listBillDetail=new ArrayList<>();
                     BillDetailBusiness.addListBillDetail(listBill,scanner,conn,listBillDetail);
-                    listBillDetail=BillDetailBusiness.filterBillDetailWithMaxQuantity(listBillDetail);
+                    listBillDetail=BillDetailBusiness.filterBillDetailWithMaxQuantity(listBillDetail,conn,"import");
                     listProduct= ProductBusiness.findListProductWithListBillDetail(listBillDetail,conn);
                     ProductBusiness.displayProductWithListBill(listBillDetail,listProduct);
                     break;
@@ -126,11 +125,14 @@ public class ReportManagement {
                     listBill= BillBusiness.findBillBeforeGivenDate(conn,date1,"export");
                     listBillDetail=new ArrayList<>();
                     BillDetailBusiness.addListBillDetail(listBill,scanner,conn,listBillDetail);
-                    listBillDetail=BillDetailBusiness.filterBillDetailWithMinQuantity(listBillDetail);
+                    listBillDetail=BillDetailBusiness.filterBillDetailWithMinQuantity(listBillDetail,conn,"export");
                     listProduct= ProductBusiness.findListProductWithListBillDetail(listBillDetail,conn);
                     ProductBusiness.displayProductWithListBill(listBillDetail,listProduct);
                     break;
                 case 10:
+                    PreLogin.account=new Account();
+                    isExit=true;
+                case 11:
                     isExit = true;
                     break;
                 default:

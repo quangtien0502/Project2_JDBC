@@ -1,14 +1,14 @@
 package ra.util;
 
 import ra.entity.*;
-import ra.presentation.PreLogin;
-
 import java.io.*;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class CommonFunction {
@@ -97,6 +97,13 @@ public class CommonFunction {
         } while (true);
     }
 
+    public static boolean isValidDateFormat(String date) {
+        String datePattern = "^\\d{4}/\\d{2}/\\d{2}$";
+        Pattern pattern= Pattern.compile(datePattern);
+        Matcher matcher = pattern.matcher(date);
+        return matcher.matches();
+    }
+
     public static String normalString(Scanner scanner,String option){
         System.out.println("Please enter your "+option);
         return scanner.nextLine();
@@ -117,11 +124,13 @@ public class CommonFunction {
 
     public static long checkLong(Scanner scanner,String option){
         System.out.println("Please enter your "+option);
-        try{
-            return Long.parseLong(scanner.nextLine());
-        }catch (NumberFormatException nfx){
-            System.err.println("Please enter a number value");
-        }
+        do {
+            try{
+                return Long.parseLong(scanner.nextLine());
+            }catch (NumberFormatException nfx){
+                System.err.println("Please enter a number value");
+            }
+        }while (true);
     }
 
     public static int checkIntegerWithDefaultValue(String option, Scanner scanner, int defaultValue) {
@@ -428,6 +437,7 @@ public class CommonFunction {
             }
         }
     }
+
 
     public static java.sql.Date convertToSqlDate(java.util.Date utilDate) {
         if(utilDate == null){

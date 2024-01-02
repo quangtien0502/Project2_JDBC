@@ -2,6 +2,7 @@ package ra.business;
 
 import ra.entity.Account;
 import ra.entity.Bill;
+import ra.entity.BillDetail;
 import ra.entity.Employee;
 import ra.util.CommonFunction;
 
@@ -60,6 +61,11 @@ public class BillBusiness {
                 System.out.println("Insert Success");
             } else if (option.trim().equalsIgnoreCase("update")) {
                 System.out.println("Update Success");
+            }
+            if(option.trim().equalsIgnoreCase("insert")){
+                BillDetail billDetail=new BillDetail();
+                billDetail.setBillId(bill.getBillId());
+                BillDetailBusiness.insertAndUpdateBillDetail(conn,"insert",billDetail);
             }
 
         } catch (SQLException e) {
@@ -167,6 +173,31 @@ public class BillBusiness {
                     listBill.add(bill);
                 } else if (option.trim().equalsIgnoreCase("import") && (bill.isBillType())) {
                     listBill.add(bill);
+                }
+            }
+            return listBill;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public static List<Bill> findBillByBillCode(Connection conn, Scanner scanner,String option,String empIdCreated){
+        String billCode=CommonFunction.normalString(scanner,"bill Code");
+        List<Bill> listBill=new ArrayList<>();
+        try {
+            CallableStatement callableStatement = conn.prepareCall("{CALL findBillByBillCode(?)}");
+            callableStatement.setString(1, billCode);
+            ResultSet rs = callableStatement.executeQuery();
+            while (rs.next()){
+                Bill bill=new Bill(rs.getLong(1),rs.getString(2),rs.getBoolean(3),rs.getString(4),rs.getDate(5),rs.getString(6),rs.getDate(7),rs.getShort(8));
+                if(bill.getEmpIdCreated().equals(empIdCreated)){
+                    if(option.trim().equalsIgnoreCase("export")&&(!bill.isBillType())){
+                        listBill.add(bill);
+                    } else if (option.trim().equalsIgnoreCase("import") && (bill.isBillType())) {
+                        listBill.add(bill);
+                    }
                 }
             }
             return listBill;

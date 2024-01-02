@@ -1,6 +1,7 @@
 package ra.presentation.user;
 
 import ra.business.BillBusiness;
+import ra.entity.Account;
 import ra.entity.Bill;
 import ra.presentation.PreLogin;
 import ra.presentation.admin.update.BillUpdate;
@@ -57,7 +58,10 @@ public class WarehouseManagementForUser {
                         }
                     }while (true);
                     break;
-                case 4: break;
+                case 4:
+                    listBill=BillBusiness.findBillByBillCode(conn,scanner,"import",PreLogin.account.getEmpId());
+                    bill.displayData(listBill);
+                    break;
                 case 5:
                     listBill= BillBusiness.findBillByBillStatusForUser(conn,scanner,"export",PreLogin.account.getEmpId());
                     bill.displayData(listBill);
@@ -84,9 +88,13 @@ public class WarehouseManagementForUser {
                         }
                     }while (true);
                     break;
-                case 8: break;
+                case 8:
+                    listBill=BillBusiness.findBillByBillCode(conn,scanner,"export",PreLogin.account.getEmpId());
+                    bill.displayData(listBill);
+                    break;
                 case 9:
-                    isExit = true;
+                    PreLogin.account=new Account();
+                    isExit=true;
                     break;
                 case 10:
                     System.exit(0);

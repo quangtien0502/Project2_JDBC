@@ -13,10 +13,11 @@ public class BillUpdate {
         do {
             if(option.trim().equalsIgnoreCase("export")){
                 System.out.println("MENU UPDATE BILL");
+                System.out.println("1.Export Bill Code\n2. Employee Id Created\n3. Employee Id Auth \n4. Back\n");
             }else {
                 System.out.println("MENU UPDATE RECEIPT");
-            }
-            System.out.println("1. Receipt Code\n2. Employee Id Created\n3. Employee Id Auth \n4. Back\n");
+            }System.out.println("1. Receipt Code\n2. Employee Id Created\n3. Employee Id Auth \n4. Back\n");
+
             int choice= CommonFunction.checkInteger("choice",scanner);
             switch (choice){
                 case 1:

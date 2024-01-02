@@ -4,6 +4,7 @@ import ra.util.CommonFunction;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class BillDetail implements IEntity<BillDetail>{
@@ -119,6 +120,16 @@ public class BillDetail implements IEntity<BillDetail>{
         }
         printTableFooterWithBoundary();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BillDetail that = (BillDetail) o;
+        return billDetailId == that.billDetailId && billId == that.billId && quantity == that.quantity && Float.compare(price, that.price) == 0 && Objects.equals(productId, that.productId);
+    }
+
+
 
     private static void printTableHeaderWithBoundaryAndAdditionalFields() {
         printHorizontalLineWithBoundary();

@@ -1,7 +1,9 @@
 package ra.presentation.admin;
 
 import ra.business.ProductBusiness;
+import ra.entity.Account;
 import ra.entity.Product;
+import ra.presentation.PreLogin;
 import ra.util.CommonFunction;
 
 import java.sql.Connection;
@@ -20,7 +22,8 @@ public class ProductManagement {
                     3. Product updates
                     4. Search for products
                     5. Update product status
-                    6. Back.""");
+                    6. Logout
+                    7.Back.""");
             choice= CommonFunction.checkInteger("choice",scanner);
             switch (choice){
                 case 1:
@@ -40,6 +43,9 @@ public class ProductManagement {
                     ProductBusiness.updateProductStatus(conn,scanner);
                     break;
                 case 6:
+                    PreLogin.account=new Account();
+                    isExit=true;
+                case 7:
                     isExit = true;
                     break;
                 default:

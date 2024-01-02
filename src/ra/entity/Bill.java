@@ -5,6 +5,7 @@ import ra.util.CommonFunction;
 import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Bill implements IEntity<Bill>{
@@ -133,6 +134,14 @@ public class Bill implements IEntity<Bill>{
                     bill.getBillId(),bill.getBillCode(),bill.isBillType()?"Receipt":"Export Bill",bill.getEmpIdCreated(),bill.getCreated(),bill.getEmpIdAuth(),bill.getAuthDate()==null?"null":bill.getAuthDate().toString(),bill.getBillStatus()==0?"Create":bill.getBillStatus()==1?"Canceled":"Approved" );
         }
         printTableFooterWithBoundary();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Bill bill = (Bill) o;
+        return billId == bill.billId && billType == bill.billType && billStatus == bill.billStatus && Objects.equals(billCode, bill.billCode) && Objects.equals(empIdCreated, bill.empIdCreated) && Objects.equals(created, bill.created) && Objects.equals(empIdAuth, bill.empIdAuth) && Objects.equals(authDate, bill.authDate);
     }
 
     private static void printTableHeaderWithBoundaryAndAdditionalFields() {

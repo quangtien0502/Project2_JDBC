@@ -5,6 +5,7 @@ import ra.util.CommonFunction;
 import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Product implements IEntity<Product>{
@@ -163,6 +164,14 @@ public class Product implements IEntity<Product>{
                     product.getProductId(),product.getProductName(),product.getManufacturer(),product.getCreated().toString(),product.getBatch(),product.getQuantity(),product.isProductStatus()?"Active":"In Active");
         }
         printTableFooterWithBoundary();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return batch == product.batch && quantity == product.quantity && productStatus == product.productStatus && Objects.equals(productId, product.productId) && Objects.equals(productName, product.productName) && Objects.equals(manufacturer, product.manufacturer) && Objects.equals(created, product.created);
     }
 
     private static void printTableHeaderWithBoundaryAndAdditionalFields() {

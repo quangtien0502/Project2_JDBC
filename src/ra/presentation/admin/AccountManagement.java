@@ -17,6 +17,7 @@ public class AccountManagement {
         boolean isExit = false;
         int choice;
         Account account=new Account();
+        Employee employee=new Employee();
         do {
             System.out.println("""
                     ******************ACCOUNT MANAGEMENT****************
@@ -42,7 +43,7 @@ public class AccountManagement {
                         boolean accStatusUpdate=CommonFunction.checkBoolean("account update status",scanner);
                         account.setAccountStatus(accStatusUpdate);
                         AccountBusiness.insertAndUpdateAccount(conn,account,"update");
-                        Employee employee= EmployeeBusiness.findEmployeeById(conn,account.getEmpId());
+                        employee= EmployeeBusiness.findEmployeeById(conn,account.getEmpId());
                         if(!employee.equals(new Employee())){
                             if(accStatusUpdate){
                                 employee.setEmpStatus((short) 0);
@@ -61,15 +62,27 @@ public class AccountManagement {
                     if(!listAcc.isEmpty()){
                         boolean isExitUpdate=false;
                         do {
-                            int indexToUpdateAccount=CommonFunction.checkInteger("account index that you want to update. To exit this update state please press the number that beyond the range of the list",scanner)-1;
+                            int indexToUpdateAccount=CommonFunction.checkInteger("account index that you want to update. To exit this update state please press the number 0",scanner)-1;
                             if((indexToUpdateAccount<listAcc.size()) && (indexToUpdateAccount>=0)){
                                 Account account1=listAcc.get(indexToUpdateAccount);
                                 boolean accStatusUpdate=CommonFunction.checkBoolean("account update status",scanner);
                                 account1.setAccountStatus(accStatusUpdate);
                                 AccountBusiness.insertAndUpdateAccount(conn,account1,"update");
-                            }else{
-                                System.err.println("There are no index like that in the list");
+                                employee= EmployeeBusiness.findEmployeeById(conn,account1.getEmpId());
+                                if(!employee.equals(new Employee())){
+                                    if(accStatusUpdate){
+                                        employee.setEmpStatus((short) 0);
+                                        EmployeeBusiness.insertAndUpdateEmployee(conn,employee,"update");
+                                    }else {
+                                        employee.setEmpStatus((short) 1);
+                                        EmployeeBusiness.insertAndUpdateEmployee(conn,employee,"update");
+                                    }
+                                }
+                            }else if(indexToUpdateAccount==-1){
+                                System.out.println("Exiting");
                                 isExitUpdate=true;
+                            }else {
+                                System.err.println("There are no index like that in the list");
                             }
                         }while (!isExitUpdate);
                     }

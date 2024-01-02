@@ -46,7 +46,8 @@ public class WarehouseManagement {
                         ReportManagement.displayReportManagement(scanner,conn);
                         break;
                     case 7:
-                        isExit = true;
+                        PreLogin.account=new Account();
+                        isExit=true;
                         break;
                     case 8:
                         System.exit(0);

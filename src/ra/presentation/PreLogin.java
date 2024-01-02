@@ -10,12 +10,12 @@ import java.sql.Connection;
 import java.util.Scanner;
 
 public class PreLogin {
-    public static Account account = CommonFunction.readDataFromFile();
+    public static Account account;
 
     public static void main(String[] args) {
         Connection conn = ConnectionDB.openConnection();
         Scanner scanner = new Scanner(System.in);
-
+        account=CommonFunction.readDataFromFile();
         do {
             if (account.equals(new Account())) {
                 CommonFunction.writeDataToFile(account);
@@ -32,7 +32,7 @@ public class PreLogin {
                             String password = scanner.nextLine();
                             if (CommonFunction.checkLogin(conn, userName, password)) {
                                 System.out.println("Login success");
-                                Account account = CommonFunction.loginSuccess(conn, userName, password);
+                                 account = CommonFunction.loginSuccess(conn, userName, password);
                                 CommonFunction.writeDataToFile(account);
                                 isCorrect = true;
                             } else {

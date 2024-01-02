@@ -103,8 +103,6 @@ public class ProductBusiness {
 
     public static void insertProduct(Connection conn, Product product) {
         try {
-
-
             conn.setAutoCommit(false);
             CallableStatement callableStatement = conn.prepareCall("{CALL InsertProduct(?,?,?,?,?,?)}");
             callableStatement.setString(1, product.getProductId());
@@ -127,6 +125,26 @@ public class ProductBusiness {
         if (!product.equals(new Product())) {
             try {
                 ProductUpdate.productUpdatePresent(product, scanner, conn);
+                conn.setAutoCommit(false);
+                CallableStatement callableStatement = conn.prepareCall("{CALL UpdateProductById(?,?,?,?,?,?,?)}");
+                callableStatement.setString(1, product.getProductId());
+                callableStatement.setString(2, product.getProductName());
+                callableStatement.setString(3, product.getManufacturer());
+                callableStatement.setDate(4,CommonFunction.convertToSqlDate(product.getCreated()) );
+                callableStatement.setShort(5, product.getBatch());
+                callableStatement.setInt(6, product.getQuantity());
+                callableStatement.setBoolean(7, product.isProductStatus());
+                callableStatement.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void updateProduct(Connection conn, Product product) {
+        if (!product.equals(new Product())) {
+            try {
                 conn.setAutoCommit(false);
                 CallableStatement callableStatement = conn.prepareCall("{CALL UpdateProductById(?,?,?,?,?,?,?)}");
                 callableStatement.setString(1, product.getProductId());

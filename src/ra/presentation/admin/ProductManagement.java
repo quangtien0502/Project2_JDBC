@@ -27,7 +27,8 @@ public class ProductManagement {
             choice= CommonFunction.checkInteger("choice",scanner);
             switch (choice){
                 case 1:
-                    product.displayData(ProductBusiness.listProduct(conn));
+                    int offsetValue=CommonFunction.checkInteger("offset value",scanner);
+                    product.displayData(ProductBusiness.listProduct(conn,offsetValue));
                     break;
                 case 2:
                     product.inputData(scanner,conn);

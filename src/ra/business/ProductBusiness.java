@@ -12,10 +12,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ProductBusiness {
-    public static List<Product> listProduct(Connection conn) {
+    public static List<Product> listProduct(Connection conn,int offsetValue) {
         List<Product> listProduct = new ArrayList<>();
         try {
-            CallableStatement callableStatement = conn.prepareCall("{CALL selectProduct()}");
+            CallableStatement callableStatement = conn.prepareCall("{CALL selectProduct(?)}");
+            callableStatement.setInt(1,offsetValue);
             ResultSet rs = callableStatement.executeQuery();
             while (rs.next()) {
                 Product product = new Product(rs.getString("product_id"), rs.getString("product_name"), rs.getString("manufacturer"), rs.getDate("created"), rs.getShort("batch"), rs.getInt("quantity"), rs.getBoolean("product_status"));
